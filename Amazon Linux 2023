@@ -1,0 +1,22 @@
+sudo dnf install -y containerd # or cri-o
+sudo systemctl enable --now containerd # or cri-o
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
+EOF
+sudo dnf install -y kubeadm kubelet kubectl
+sudo systemctl enable --now kubelet
+
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16 # Choose your desired pod network CIDR
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f https://docs.projectcalico.org/manifests/saim.yaml # Example for saim
+
+kubeadm join
+kubectl get nodes

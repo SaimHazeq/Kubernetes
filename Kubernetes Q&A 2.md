@@ -90,15 +90,11 @@ To count them: `k get po -l env=prod --no-headers | wc -l`
 First change to the directory tracked by kubelet for creating static pod: `cd /etc/kubernetes/manifests` (you can verify path by reading kubelet conf file)    
 
 Now create the definition/manifest in that directory
-
 `k run some-pod --image=python --command sleep 2017 --restart=Never --dry-run=client -o yaml > static-pod.yaml`
 
-### 18. Describe how would you delete a static Pod.
-
+### 16. Describe how would you delete a static Pod.
 Locate the static Pods directory (look at `staticPodPath` in kubelet configuration file).
-
 Go to that directory and remove the manifest/definition of the staic Pod (`rm <STATIC_POD_PATH>/<POD_DEFINITION_FILE>`)
-
 
 ## Troubleshooting Pods
 

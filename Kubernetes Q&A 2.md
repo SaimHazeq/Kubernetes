@@ -1,21 +1,16 @@
 ## Pods
 
-<details>
-<summary>Run a command to view all the pods in the current namespace</summary><br><b>
+### 1. Run a command to view all the pods in the current namespace.
 
 `kubectl get pods`
 
 Note: create an alias (`alias k=kubectl`) and get used to `k get po`
-</b></details>
 
-<details>
-<summary>Run a pod called "nginx-test" using the "nginx" image</summary><br><b>
+### 2. Run a pod called "nginx-test" using the "nginx" image.
 
 `k run nginx-test --image=nginx`
-</b></details>
 
-<details>
-<summary>Assuming that you have a Pod called "nginx-test", how to remove it?</summary><br><b>
+### 3. Assuming that you have a Pod called "nginx-test", how to remove it?
 
 `k delete po nginx-test`
 </b></details>

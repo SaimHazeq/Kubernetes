@@ -1,3 +1,9 @@
+# Kubernetes Interview Q&A
+
+A structured Kubernetes interview preparation guide covering Pods, Namespaces, Nodes, Services, ReplicaSets, Deployments, Scheduling, Affinity, Taints, Resource Management, and Monitoring.
+
+---
+
 ## Pods
 
 ### 1. Run a command to view all the pods in the current namespace.

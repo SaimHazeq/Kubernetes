@@ -45,7 +45,8 @@ EOL
 k create -f pod.yaml
 ```
 
-If you ask yourself how would I remember writing all of that? no worries, you can simply run `kubectl run some_pod --image=redis -o yaml --dry-run=client > pod.yaml`.                                                                     If you ask yourself "how am I supposed to remember this long command" time to change attitude ;)
+If you ask yourself how would I remember writing all of that? no worries, you can simply run `kubectl run some_pod --image=redis -o yaml --dry-run=client > pod.yaml`.                                                                       
+If you ask yourself "how am I supposed to remember this long command" time to change attitude ;)
 
 ### 7. Create a YAML of a Pod without actually running the Pod with the kubectl command (use whatever image you prefer).
 
@@ -88,11 +89,11 @@ To count them: `k get po -l env=prod --no-headers | wc -l`
 ### 15. Create a static pod with the image <code>python</code> that runs the command <code>sleep 2017.
 
 First change to the directory tracked by kubelet for creating static pod: `cd /etc/kubernetes/manifests` (you can verify path by reading kubelet conf file)    
-
 Now create the definition/manifest in that directory
 `k run some-pod --image=python --command sleep 2017 --restart=Never --dry-run=client -o yaml > static-pod.yaml`
 
 ### 16. Describe how would you delete a static Pod.
+
 Locate the static Pods directory (look at `staticPodPath` in kubelet configuration file).
 Go to that directory and remove the manifest/definition of the staic Pod (`rm <STATIC_POD_PATH>/<POD_DEFINITION_FILE>`)
 

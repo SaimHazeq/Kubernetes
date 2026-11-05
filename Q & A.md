@@ -3,30 +3,48 @@
 - **Control Plane**
 - **Worker Nodes**
 
-**The Control plane managing the entire cluster. It's main components are;**     
-**1. kube-apiserver: The API server acts as the entry point to the cluster.**
-  **All communication between users, worker nodes, and control plane components happens through the API Server.**     
-**2. etcd: It is a distributed key-value database.**
-  **It stores all Kubernetes cluster information.**
-  **It maintains the cluster's desired and current state information.**   
-**3. kube-shceduler: It is responsible for scheduling nely created Pods onto suitale worker nodes.**
-  **It checks available CPU, memory, resource requests, node selectors, taints, and tolerations.**      
-**4. kube-controller-manager: It runs different controllers that continuosly monitor the cluster.**
-  **It ensures the actual cluster state matches the desired state.**
-  **It automatically takes corrective actions when something goes wrong.**     
-**5. cloud-controller-manager: It integrates Kubernetes with cloud providers such as AWS, Azure, and GCP.**
-  **It manages cloud-specific resources.**
+**The Control plane**   
+**Managing the entire cluster. It's main components are;**   
+  
+**1. kube-apiserver:**    
+**The API server acts as the entry point to the cluster.**  
+**All communication between users, worker nodes, and control plane components happens through the API Server.**  
+  
+**2. etcd:**   
+**It is a distributed key-value database.**   
+**It stores all Kubernetes cluster information.**   
+**It maintains the cluster's desired and current state information.**  
+  
+**3. kube-shceduler:**   
+**It is responsible for scheduling nely created Pods onto suitale worker nodes.**  
+**It checks available CPU, memory, resource requests, node selectors, taints, and tolerations.**  
+  
+**4. kube-controller-manager:**   
+**It runs different controllers that continuosly monitor the cluster.**  
+**It ensures the actual cluster state matches the desired state.**    
+**It automatically takes corrective actions when something goes wrong.**   
+  
+**5. cloud-controller-manager:**   
+**It integrates Kubernetes with cloud providers such as AWS, Azure, and GCP.**  
+**It manages cloud-specific resources.**  
 
-**The Worker Nodes run the actual application workloads. Their main components are;**      
-**1. kubelet: It is an agent running on every worker node.**    
-**It communicates with the API server.**   
-**It ensures containers inside Pods are running as expected.**  
-**2. kube-proxy: It maintains network rules on worker nodes.**   
-**It enables communication between Kubernetes Services and backend Pods.**  
-**3. Container Runtime: It is responsible for running containers.**  
-**It pulls container images from registries.**    
-**It starts, stops, and manages containers.**   
-
+**The Worker Nodes**   
+**Run the actual application workloads. Their main components are;**  
+  
+**1. kubelet:**    
+**It is an agent running on every worker node.**      
+**It communicates with the API server.**     
+**It ensures containers inside Pods are running as expected.**    
+  
+**2. kube-proxy:**   
+**It maintains network rules on worker nodes.**     
+**It enables communication between Kubernetes Services and backend Pods.**    
+  
+**3. Container Runtime:**   
+**It is responsible for running containers.**   
+**It pulls container images from registries.**      
+**It starts, stops, and manages containers.**     
+    
 **The Workflow is;**   
 **1. kubectl: Sends the deployment request to the API Server.**  
 **2. kube-apiserver: Validates the request and stores the desired state in etcd.**  
@@ -35,7 +53,8 @@
 **5. kube-scheduler: Selects suitable worker nodes for unscheduled Pods.**  
 **6. kubelet: Receives the Pod assignment and instructs the container runtime.**  
 **7. Container Runtime: Pulls the Docker image and starts the containers.**  
-**8. kube-proxy: Maintains networking rules to enable Service-based communication.**    
+**8. kube-proxy: Maintains networking rules to enable Service-based communication.**   
+  
 **The application is now running inside the Kubernetes cluster.**
 
 What is a Pod?        

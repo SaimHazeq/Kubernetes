@@ -1,9 +1,9 @@
 ### 1. What are the main components of Kubernetes architecture? 
 **Kubernetes architecture is divided into two main parts:**  
-- **Control Plane**
-- **Worker Nodes**
+- **1. Control Plane**
+- **1. Worker Nodes**
 
-**The Control plane**   
+**1. The Control plane**   
 **Managing the entire cluster. It's main components are;**   
   
 **1. kube-apiserver:**    
@@ -28,7 +28,7 @@
 **It integrates Kubernetes with cloud providers such as AWS, Azure, and GCP.**  
 **It manages cloud-specific resources.**  
 
-**The Worker Nodes**   
+**2. The Worker Nodes**   
 **Run the actual application workloads. Their main components are;**  
   
 **1. kubelet:**    
@@ -57,26 +57,78 @@
   
 **The application is now running inside the Kubernetes cluster.**
 
-What is a Pod?        
-Why is Pod the smallest deployable unit?        
-What is a Deployment?       
-What is the difference between Pod and Deployment?         
-What is a ReplicaSet?         
-What is the difference between Deployment and ReplicaSet?       
-What is a Service in Kubernetes?         
-Why do we need Services?         
-What are the types of Services?           
-What is kubectl?         
-What is kubelet?      
-What is kube-proxy?          
-What is the Kubernetes API server?        
-What is etcd in Kubernetes?       
-Explain Kubernetes architecture.     
-How does Kubernetes schedule a Pod?       
-What happens if a node goes down?        
-What is the difference between init containers and normal containers?        
-What are sidecar containers?          
-What is a pause container?        
+### 2. What is a Pod?
+**A Pod is the smallest deployable unit in Kubernetes. It acts as a wrapper around one or more containers that run together.**  
+**Containers inside a Pod share networking, storage volumes, and resources.**
+
+### 3. Why is Pod the smallest deployable unit?
+**A Pod is called the smallest deployable unit because Kubernetes schedules, deploy, and manages containers through Pods rather than managing individual containers directly.**
+
+### 4. What is a Deployment? 
+**A Deployment is a Kubernetes resource tat manages and maintain Pods.**  
+**It ensures the desired number of Pod replicas are running and provides features like scaling, rolling updates, and rollbacks.**
+
+### 5. What is the difference between Pod and Deployment? 
+**A Pod is the smallest deployable unit in Kubernetes that runs containers, whereas a Deployment is a higher-level resource that manages Pods through ReplicaSet.**
+
+### 6. What is a ReplicaSet?
+**A ReplicaSet is a Kubernetes resource that ensures a specified number of identical Pod replicas are running at all times.**  
+**If a Pod crashes, gets deleted, or fails, the ReplicaSet automatically creates a replacement Pod to maintain the desired replica count.**
+
+## 7. What is the difference between Deployment and ReplicaSet? 
+**Deployment is a higher-level Kubernetes resource that manages ReplicaSet and provides features like rolling updates, rollback, and scaling**  
+**ReplicaSet is responsible for maintaining the desired number of Pod replicas. If a pod crashes or gets deleted, ReplicaSet creates a replacement.**
+
+### 8. What is a Service in Kubernetes?  
+**A Service is a Kubernetes resource that provides a stable network endpoint to access a group of Pods.**  
+**Since Pods are temporary and their IP addresses can change when they are recreated, a Service provides a stable IP address and DNS name for communication.**  
+
+**Types of Kubernetes Services**  
+
+**1. ClusterIP: Exposes the application internally within the Kubernetes cluster. (Default type)**  
+
+**2. NodePort: Exposes the application on a specific port of each Worker Node.**  
+
+**3. LoadBalancer: Expose the application externally using a cloud provider's load balancer.**  
+
+**4. ExternalName: Maps a Kubernetes Service to an external DNS name.**  
+
+### 9. Why do we need Services?   
+**we need Services in Kubernetes because Pods are ephemeral, and their IP addresses can change when they are recreated.**  
+**A Service provides a stable IP address and DNS name to access Pods.**  
+**It also enables service discovery, load balancing, and communication between different application components.** 
+
+### 10. What is kubectl?
+**kubectl is a command-line tools used to interact with and manage Kubernetes clusters. It communicates with the Kubernetes API Server to perform operations such as deploying applications, managing Pods, checking cluster status, viewing logs, and troubleshooting issues.**
+
+### 11. What is kubelet?
+**Kubelet is an agent that runs on every Worker Nods in a Kubernetes cluster. It communicates with the API Server and ensures that the containers inside assigned Pods are running as expected.**
+
+### 12. How does Kubernetes schedule a Pod?          
+**Kubernetes uses kube-scheduler to schedule Pods onto suitable Worker Nodes. When a new Pod is created, the API Server stores its information, and the scheduler detects that it is unassigned.**  
+**It filters nodes based on resource availability and scheduling constraints, scores the eligible nodes, and selects the most suitable one.**  
+**After assignment, the kubelet on that Worker Node communicates with the container runtime to start the containers.**
+     
+### 13. What happens if a node goes down?   
+**If a Worker Node goes down, the Kubernetes Control Plane detects the failure.**  
+**The Node Controller marks the Noda as NotReady.**  
+**After the eviction period, Pods managed by Deployments or ReplicaSet are recreated and scheduled onto healthy Worker Nodes, provided sufficient resources are available.**  
+**Kubernetes Services then route traffic to the healthy Pods, helping maintain application availability.**
+
+### 14. What is the difference between init containers and normal containers?    
+**Init Containers are special containers that runs before the main application containers start.**  
+**They perform initialization tasks such as checking database connectivity, downloading configurations, or preparing the environment.**  
+
+**Normal Containers run the actual application workload inside a Pod.**
+
+### 15. What are sidecar containers?
+**A sidecar Container is an additional container running alongside the main application container inside the same Pod.**  
+**It provides supporting functionality such as logging, monitoring, security, or proxy services without modifying the main application.**
+
+### 16. What is a pause container? 
+**A Pause Container is a special infrastructure container used b Kubernetes container runtime to establish and maintain the shared namespaces of a Pod.**  
+**it provides a shared network namespace so that multiple containers inside the same Pod can communicate using localhost and share the same Pod IP address.**
+
 What are liveness probes?             
 What are readiness probes      
 What are startup probes?      

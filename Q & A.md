@@ -154,25 +154,25 @@
 **The Pod itself can remain in the Running state while its container restarts.**  
 ### 21. How do you debug a failing Pod?
 **Common Pod Failures;**   
-- **Pending**
+- **Pending**     
   **Insufficient CPU/Memory or scheduling issues**
 
-- **CrashLoopBackOff**
+- **CrashLoopBackOff**     
   **Application repeatedly crashing**
 
-- **ImagePullBackOff**
+- **ImagePullBackOff**       
   **Incorrect image name or registry authentication**
 
-- **ErrImagePull**
+- **ErrImagePull**     
   **Image cannot be pulled**
 
-- **OOMKilled**
+- **OOMKilled**      
   **Container exceeded its memory limit**
 
-- **CreateContainerConfigError**
+- **CreateContainerConfigError**        
   **Missing ConfigMap, Secret, or invalid configuration**
 
-- **Running but NotReady**
+- **Running but NotReady**        
   **Readiness probe failing**
 
 **When a Pod fails, I first check its status using `kubectl get pods`.**  
@@ -225,11 +225,11 @@ kubectl rollout undo deployment/myapp                 #Rollback if wrong
 ### 24. What is rolling rollback? 
 **Rollback in Kubernetes means reverting a Deployment to a previously working version if the latest deployment fails or cause issues.**  
 
-| Rolling Update                     | Rollback                                         |
-| ---------------------------------- | ------------------------------------------------ |
-| Deploy a new version               | Reverts to an older version                      |
-| Replaces old pods with new Pods    | Replaces current Pods with previous-version Pods |
-| Used during application upgrades   | Used when a deployment causes problems           |
+| Rolling Update                       | Rollback                                         |
+  | ---------------------------------- | ------------------------------------------------ |
+| Deploy a new version                 | Reverts to an older version                      |
+| Replaces old pods with new Pods      | Replaces current Pods with previous-version Pods |
+| Used during application upgrades     | Used when a deployment causes problems           |
 
 
 ### 25. How do you rollback a deployment?

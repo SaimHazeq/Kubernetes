@@ -75,7 +75,7 @@
 **A ReplicaSet is a Kubernetes resource that ensures a specified number of identical Pod replicas are running at all times.**  
 **If a Pod crashes, gets deleted, or fails, the ReplicaSet automatically creates a replacement Pod to maintain the desired replica count.**
 
-## 7. What is the difference between Deployment and ReplicaSet? 
+### 7. What is the difference between Deployment and ReplicaSet? 
 **Deployment is a higher-level Kubernetes resource that manages ReplicaSet and provides features like rolling updates, rollback, and scaling**  
 **ReplicaSet is responsible for maintaining the desired number of Pod replicas. If a pod crashes or gets deleted, ReplicaSet creates a replacement.**
 
@@ -129,28 +129,124 @@
 **A Pause Container is a special infrastructure container used b Kubernetes container runtime to establish and maintain the shared namespaces of a Pod.**  
 **it provides a shared network namespace so that multiple containers inside the same Pod can communicate using localhost and share the same Pod IP address.**
 
-What are liveness probes?             
-What are readiness probes      
-What are startup probes?      
-What happens if a liveness probe fails?        
-How do you debug a failing Pod?       
-How do you exec into a container?       
-What is rolling update in Kubernetes?   
-What is rolling rollback?   
-How do you rollback a deployment?   
-What is a DaemonSet?    
-What is a StatefulSet?   
-Difference between StatefulSet and Deployment?   
-What is a Job?   
-What is a CronJob?       
-How does Kubernetes networking work?     
-What is the Pod network?    
-What is CNI?       
-What are popular CNI plugins?     
-What is kube-proxy?   
-What is ClusterIP?    
-What is NodePort?   
-What is LoadBalancer?   
+### 17. What are liveness probes?
+**A Liveness Probe is used to check whether an application container is still functioning properly.**  
+**If the health fails repeatedly, Kubernetes restarts the container automatically.**  
+**It helps detect issues like application deadlocks or unresponsive processes and provides automatic recovery.**
+
+### 18. What are readiness probes 
+**A Readiness Probe is used to check whether an application is ready to receive traffic.**  
+**If the readiness check fails, Kubernetes removes the Pod from the Service endpoints, preventing traffic from reaching it.**  
+**Once the application becomes healthy again, Kubernetes adds it back to the available endpoints.**  
+**Unlike liveness probes, readiness probes do not restart containers.**
+
+### 19. What are startup probes?   
+**A Startup Probe checks whether an application has successfully started inside a container.**  
+**It is mainly used for applications that require more time to initialize, such as Java application.**  
+**Until the startup probe succeeds, Kubernetes does not execute liveness and readiness probes.**  
+**This prevents premature container restarts during application startup.**
+
+### 20. What happens if a liveness probe fails?
+**If a Liveness Probe fails repeatedly and reaches its configured `failureThreshold`, kubelet restarts the container.**  
+**This helps Kubernetes recover automatically from application issues such as deadlocks or unresponsive processes.**  
+
+**Important: A liveness probe failure restarts the container, not necessarily the entire Pod.**  
+**The Pod itself can remain in the Running state while its container restarts.**  
+### 21. How do you debug a failing Pod?
+**Common Pod Failures;**   
+- **Pending**
+  **Insufficient CPU/Memory or scheduling issues**
+
+- **CrashLoopBackOff**
+  **Application repeatedly crashing**
+
+- **ImagePullBackOff**
+  **Incorrect image name or registry authentication**
+
+- **ErrImagePull**
+  **Image cannot be pulled**
+
+- **OOMKilled**
+  **Container exceeded its memory limit**
+
+- **CreateContainerConfigError**
+  **Missing ConfigMap, Secret, or invalid configuration**
+
+- **Running but NotReady**
+  **Readiness probe failing**
+
+**When a Pod fails, I first check its status using `kubectl get pods`.**  
+**Then I use `kubectl describe pod` to investigate events and identify the issue.**  
+**I check application logs using `kubectl logs`, including previous container logs if the container has restarted.**  
+**I also check resource utilization using `kubectl top pod` and inspect events.**  
+**Based on the error, I troubleshoot image-pulling issues, resource limits, application configuration, networking, or health probes.**  
+**After identifying the root cause, I fix the issue and verify the Pod is running and ready.**  
+
+**Important Commands to Remember**
+```
+kubectl get pods                        #Pod status
+kubectl describe pod <pod-name>         #Describe the Pod
+kubectl logs <pod-name>                 #Pod logs
+kubectl logs <pod-name> --previous      #Previous container logs
+kubectl get events                      #Check pod Events
+kubectl top pod <pod-name>              #Resource usage
+kubectl top nodes
+kubectl exec -it <pod-name> -- /bin/sh  #Access the container
+```
+
+### 22. How do you exec into a container?  
+**`kubectl exec -it <pod-name> -- /bin/bash`**  
+**`kubectl exec -it <pod-name> -- bin/sh`**  
+
+**Remember**  
+- **`-i` = Interactive mode.**
+- **`-t` = Allocates a terminal**
+- **`-c` = Specifies the container.**
+- **`--` = Separates kubectl options from the command executed inside the container.**
+
+### 23. What is rolling update in Kubernetes?   
+**A rolling update is a Kubernetes deployment strategy that gradually replaces old Pods with new Pods without taking the application completely offline.**  
+**Kubernetes creates new Pods, waits until they become Ready, and then terminates old Pods.**  
+**We can control the update using `maxSurge` and `maxUnavailabe`, and roll back if the deployment fails.**  
+
+**Important Deployment settings**  
+- **`maxSurge`: Maximum additional Pods Kubernetes can create during an update.**
+- **`maxUnavailabe`: Maximum Pods that can be unavailable during an update.**  
+
+**Important Command for Rolling Update**
+
+```  
+kubectl set image deployment/myapp myapp=nginx:1.27     
+kubectl rollout status deployment/myapp               #Check rollout status
+kubectl rollout history deployment/myapp              #Check rollout history
+kubectl rollout undo deployment/myapp                 #Rollback if wrong
+```
+
+### 24. What is rolling rollback? 
+**Rollback in Kubernetes means reverting a Deployment to a previously working version if the latest deployment fails or cause issues.**  
+
+| Rolling Update                     | Rollback                                         |
+| ---------------------------------- | ------------------------------------------------ |
+| Deploy a new version               | Reverts to an older version                      |
+| Replaces old pods with new Pods    | Replaces current Pods with previous-version Pods |
+| Used during application upgrades   | Used when a deployment causes problems           |
+
+
+### 25. How do you rollback a deployment?
+
+
+### 26. What is a DaemonSet?  
+
+
+### 27. What is a StatefulSet?   
+### 28. Difference between StatefulSet and Deployment?   
+### 29. What is a Job?   
+### 30. What is a CronJob?       
+### 31. How does Kubernetes networking work?     
+### 32. What is the Pod network?    
+### 33. What is CNI?       
+### 34. What are popular CNI plugins?     
+   
 What is Ingress?   
 What is Ingress Controller?    
 Difference between Ingress and LoadBalancer?   

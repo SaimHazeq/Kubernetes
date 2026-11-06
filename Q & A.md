@@ -213,7 +213,7 @@ kubectl exec -it <pod-name> -- /bin/sh  #Access the container
 - **`maxSurge`: Maximum additional Pods Kubernetes can create during an update.**
 - **`maxUnavailabe`: Maximum Pods that can be unavailable during an update.**  
 
-**Important Command for Rolling Update**
+**Rolling Update Commands**
 
 ```  
 kubectl set image deployment/myapp myapp=nginx:1.27     
@@ -223,7 +223,17 @@ kubectl rollout undo deployment/myapp                 #Rollback if wrong
 ```
 
 ### 24. What is rolling rollback? 
-**Rollback in Kubernetes means reverting a Deployment to a previously working version if the latest deployment fails or cause issues.**  
+**Rollback in Kubernetes means reverting a Deployment to a previously working version if the latest deployment fails or cause issues.**   
+
+****Rollback Commands**  
+
+```
+kubectl rollout history deployment/myapp                #Check rollout history
+kubectl rollout undo deployment/myapp                   #Rollback to previous
+kubectl rollout undo deployment/myapp --to-revision=2   #Rollback to specific version  
+kubectl rollout status deployment/myapp                 #Rollout status
+```   
+
 
 | Rolling Update                       | Rollback                                         |
   | ---------------------------------- | ------------------------------------------------ |

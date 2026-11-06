@@ -242,20 +242,36 @@ kubectl rollout status deployment/myapp                 #Rollout status
 | Used during application upgrades     | Used when a deployment causes problems           |
 
 
-### 25. How do you rollback a deployment?
+### 25. What is a DaemonSet?  
+****A DaemonSet is a Kubernetes controller that ensures a copy of a Pods runs on every eligible worker node.**  
+**When a new node joins the cluster, the DaemonSet automatically schedules a Pod on it.**  
+**It is commonly used for logging, monitoring, networking, and security agents.**
 
+### 26. What is a StatefulSet?
+**A StatefulSet is a Kubernetes controller used to manage stateful application such as MySQL, PostgreSQL, and MongoDB.**  
+**It provides stable Pod identities, persistent storage, and ordered deployment and termination.**  
+**Even if a Pod is recreated, it retains its identity and can reconnect to its existing persistent volume.**
 
-### 26. What is a DaemonSet?  
+### 27. Difference between StatefulSet and Deployment? 
+**Deployment is mainly used for stateless application where Pods are interchangeable, such as Nginx and frontend application.**
 
+**StatefulSet is used for stateful application like MySQL, and MongoDB that require stable Pod identities, persistent storage, and ordered deployment.**  
 
-### 27. What is a StatefulSet?   
-### 28. Difference between StatefulSet and Deployment?   
-### 29. What is a Job?   
-### 30. What is a CronJob?       
-### 31. How does Kubernetes networking work?     
-### 32. What is the Pod network?    
-### 33. What is CNI?       
-### 34. What are popular CNI plugins?     
+**In short, Deployment manages interchangeable replicas, whereas StatefulSet manages Pods with stable identities.**
+
+### 28. What is a Job?
+**A Job in Kubernetes is used to run a task until it completes successfully.**  
+**It creates Pods to execute tasks such as database backups, migrations, and batch processing.**  
+**If a Pod fails, Kubernetes can retry the task based on the Job's retry configuration.**  
+
+### 29. What is a CronJob?
+**A CronJob in Kubernetes is used to schedule Jobs at specific times or intervals, similar to Linux cron. For example, we can use a CronJob to run database backups every day at midnight, clean logs periodically, or generate scheduled reports.**
+
+### 30. How does Kubernetes networking work?     
+### 31. What is the Pod network?     
+### 32. What is CNI?    
+### 33. What are popular CNI plugins?       
+### 34.      
    
 What is Ingress?   
 What is Ingress Controller?    

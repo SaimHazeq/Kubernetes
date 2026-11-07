@@ -225,7 +225,7 @@ kubectl rollout undo deployment/myapp                 #Rollback if wrong
 ### 24. What is rolling rollback? 
 **Rollback in Kubernetes means reverting a Deployment to a previously working version if the latest deployment fails or cause issues.**   
 
-****Rollback Commands**  
+**Rollback Commands**  
 
 ```
 kubectl rollout history deployment/myapp                #Check rollout history
@@ -243,7 +243,7 @@ kubectl rollout status deployment/myapp                 #Rollout status
 
 
 ### 25. What is a DaemonSet?  
-****A DaemonSet is a Kubernetes controller that ensures a copy of a Pods runs on every eligible worker node.**  
+**A DaemonSet is a Kubernetes controller that ensures a copy of a Pods runs on every eligible worker node.**  
 **When a new node joins the cluster, the DaemonSet automatically schedules a Pod on it.**  
 **It is commonly used for logging, monitoring, networking, and security agents.**
 

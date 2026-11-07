@@ -341,19 +341,103 @@ kubectl rollout status deployment/myapp                 #Rollout status
 | Requires an Ingress Controller                          | Requires load balancer integration                         |
 
 
-What is DNS in Kubernetes?   
-How does service discovery work?   
-What is a Persistent Volume (PV)?   
-What is a Persistent Volume Claim (PVC)?    
-What is the difference between PV and PVC?    
-What is a StorageClass?    
-What is a volume in Kubernetes?    
-Types of volumes?      
-What happens to data if a Pod dies?   
-What is ConfigMap?   
-What is Secret?   
-Difference between ConfigMap and Secret?   
-How do you pass environment variables from ConfigMap?    
+### 36. What is DNS in Kubernetes?  
+**DNS in Kubernetes provides service discovery, allowing Pods to communicate with Services using DNS names instead of IP addresses.**  
+**CoreDNS handles DNS resolution inside the cluster. For example, a frontend Pod can access a backend Service using `<service-name>.<namespace>.svc.cluster.local` even if the backend Pod IPs change.**
+
+### 37. How does service discovery work?  
+**Service discovery in Kubernetes allows applications to find and communicate with other applications without manually configuring Pod IP addresses.**  
+**Kubernetes Services provide stable endpoints, while CoreDNS resolves Service names into IP addresses. The Service then forwards traffic to healthy backend Pods.**  
+**This makes communication relaible even when Pods are recreated or their IP addresses change.**
+
+### 38. What is a Persistent Volume (PV)?
+**A Persistent Volume is a storage resource in Kubernetes that provides persistent storage independent of Pod lifecycle.**   
+**It allows application like MySQL and PostgreSQL to retain data even when Pods are deleted or recreated.**  
+**Pods access PVs through Persistent Volume Claims.**
+
+### 39. What is a Persistent Volume Claim (PVC)?  
+**A Persistent Volume Claim is a request for storage in Kubernetes.**  
+**An application requests storage through a PVC, and Kubernetes binds it to a suitable Persistent Volume.**  
+**Pods then mount the PVC to access Persistent storage. For example, a MySQL Pod can use a 10GB PVC to store database files even if the Pod is recreated.**
+
+### 40. What is the difference between PV and PVC? 
+| PV                                      | PVC                             |  
+----------------------------------------- | --------------------------------|  
+| Actual storage resource                 | Storage request                 |  
+| Provides storage capacity               | Request storage capacity        |  
+| Managed by cluster/storage provisioning | Crated by users or applications |  
+| Independent of Pod lifecycle            | Used by Pods to access storage  |
+
+
+### 41. What is a StorageClass?
+**A StorageClass is a kubernetes resource that defines how storage should be dynamically provisioned.**  
+
+**In simple terms, it allows Kubernetes to automatically create storage when an application requests it through a PVC, without requiring an administrator to manually create a PV first.**   
+
+**How does it work:**
+- **1. Administrator configures a StorageClass.**
+- **2. User creates a PVC referencing that StorageClass.**
+- **3. Kubernetes calls the configured provisioner.**
+- **4. The provisioner creates the actual storage.**
+- **5. Kubernetes creates a PV and binds it to the PVC.**
+- **6. Pod mounts the PVC and uses the storage.**  
+
+### 42. What is a volume in Kubernetes?  
+**A Volume in Kubernetes provides storage to containers inside a Pod.**  
+**It allows containers to share data and retain data across container restarts.**    
+  
+**Kubernetes supports different types of Volumes;**
+- **emptyDir : Temporary storage shared between containers in a pod**
+
+- **hostPath : Mounts a directory from the worker node**
+
+- **persistentVolumeClaim : Uses persistent storage through a PVC**
+
+- **configMap : Mounts configuratin files**
+
+- **secret : Mounts sensitive data**
+
+- **NFS : Uses network file storage**
+
+      
+### 43. What happens to data if a Pod dies?
+**If a Pod dies, data stored inside its container filesystem is lost when the container is removed.**  
+**Data in emptyDir survives container restarts but is deleted when the Pod is removed.**  
+**To preserve application data across Pod deletion or recreation, we use Persistent Volumes and Persistent Volume Claims.**  
+**For Example, a MySQL Pod can use an AWS EBS-backed PVC to retain database data.**  
+
+### 44. What is ConfigMap?
+**A ConfigMap is a Kubernetes object to store non-sensitive configuration data separately form application container images.**  
+**It helps you manage application configuration without rebuilding the Docker image.**  
+
+**ConfigMap Stores non-sensitive information like;**  
+- **Database hostname**
+- **Application environment.**
+- **API endpoints.**
+- **Application configuration files.**
+- **Log levels.**
+
+### 45. What is Secret? 
+**A Secret is a Kubernetes object used to store sensitive information such as Passwords, API kays, and authentication tokens.**  
+**Instead of hardcoding credentials inside application code or Docker images, we store them in Secrets.**  
+
+**Secrets Stores non-sensitive information like;**  
+- **Database passwords.**
+- **API keys.**
+- **SSH credentials.**
+- **TLS certificates.**
+- **Authentication tokes.**
+
+### 46. Difference between ConfigMap and Secret? 
+| ConfigMap                              | Secret                                   | 
+|----------------------------------------|------------------------------------------|  
+| Non-sensitive configuration            | Sensitive information                    |  
+| Store Application settings             | Store passwords, tokens, keys            |  
+| In plain text                          | Base4 encoded in YAML/API representation | 
+| Not intended for secrets               | Encryption at rest can be configured     |  
+| Environment variables or mounted files | Environment variables or mounted files   | 
+
+### 47. How do you pass environment variables from ConfigMap?    
 What is RBAC?   
 What are Roles and RoleBindings?    
 Difference between Role and ClusterRole?    

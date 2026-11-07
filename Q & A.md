@@ -466,7 +466,7 @@ kubectl rollout status deployment/myapp                 #Rollout status
 - **create = Create resources**
 - **update = Update resources**
 - **patch = Partially update resources**
-- **delete = Delete resources   
+- **delete = Delete resources**   
 
 
 ### 49. What is a ServiceAccount? 

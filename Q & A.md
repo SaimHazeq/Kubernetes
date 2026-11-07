@@ -495,27 +495,208 @@ kubectl rollout status deployment/myapp                 #Rollout status
 
 
 ### 52. What is Horizontal Pod Autoscaler (HPA)?
+**It automatically scales the number of Pod replicas based on CPU, memory, or custom metrics.**  
+**For example, if CPU utilization increases beyond the configured target of 70%, HPA increases the number of replicas.**   
+**When traffic decreases, it scales them down.**  
+
+- **HPA typically requires Metrics Server for CPU and memory metrics.**
+- **CPU utilization targets depend on CPU resource request being configured.**
+- **HPA works with Deployments and StatefulSets.**
+- **HPA does not create additional worker nodes; Cluster Autoscaler handles node scaling.**
+     
+### 53. What is Vertical Pod Autoscaler?  
+***It automatically adjust CPU and memory resource request based on application usage.**  
+**For example, if an application consistently requires more memory than its current allocation, VPA recommends or applies higher resource request.**  
+**It helps prevent resource shortages and optimize resource utilization.** 
+
+**Unlike HPA, which scales the number of Pods, VPA adjust resource allocated to containers.**
 
 
-What metrics does HPA use?     
-What is Vertical Pod Autoscaler?    
-How do you monitor Kubernetes?    
-How do you collect logs?   
-How do you debug cluster issues?     
-Pod stuck in Pending state. What do you check?    
-Pod stuck in CrashLoopBackOff. What do you do?    
-Pod cannot pull image.   
-Service not reachable.    
-Pod not scheduling.    
-Node not ready.    
-Deployment not updating.   
-PVC stuck in pending.     
-High CPU usage in Pods.    
-How do you debug networking issues?      
-How do you deploy applications to Kubernetes using CI/CD?    
-How do you implement blue-green deployment?    
-What is canary deployment?      
-How do you rollback a failed deployment?        
+### 54. How do you monitor Kubernetes?   
+**I monitor Kubernetes using Prometheus and Grafana. Prometheus collects metrics from Kubernetes components, worker nodes, Pods, and applications, while Grafana provides dashboards for visualization.**  
+
+**I use Node Exporter for node-level metrics and kube-state-metrics for Kubernetes object status. I also configure Alertmanager for notifications.**  
+
+**Additionally, I use kubectl commands like `get pods`,`top nodes`, `top pods`, `describe`, and `logs` for troubleshooting.**  
+
+**I monitor CPU, memory, Pod restarts, node health, application latency, and error rates.**  
+
+**1. Cluster level:**
+- **Cluster health and API Server availability.**
+- **Number of worker nodes.**
+- **Node CPU and memory utilization.**
+- **Node readiness status.**
+
+**2. Pod level:**
+- **Pod CPU and memory consumption.**
+- **Pod restarts and failures.**
+- **Pending Pods and CrashLoopBackOff.**
+- **OOMKilled containers.**
+
+**3. Application level:**
+- **Application response time.**
+- **HTTP 4xx and 5xx errors.**
+- **Request rate.**
+- **Application availability.**
+
+**4. Infrastructure level:**  
+- **Disk usage.**
+- **Network traffic.**
+- **Persistent Volume capacity.**
+- **Container resource utilization.**
+
+
+### 55. How do you collect logs? 
+**I implement centralized logging using Fluent Bit. Applications write logs to stdout and stderr, which are collected by agents running as DaemonSets on worker nodes.**  
+**These agents forward logs to centralized platforms like AWS CloudWatch. I use Grafana to search, filter, and analyze logs.**  
+**This helps troubleshoot application errors, container failures, and production incidents across the cluster.**
+
+
+### 56. How do you debug cluster issues?    
+**When debugging Kubernetes cluster issues, I follow a systematic troubleshooting approach.**  
+
+**First, I check cluster and node health using `kubectl get nodes`.**  
+
+**Then I check Pod status, events, and logs using `kubectl get pods`, `kubectl describe`, and `kubectl logs`.**  
+
+**I investigate CPU and memory utilization using `kubectl top`.**  
+
+**If necessary, I troubleshoot networking, DNS, CNI, storage, and application configurations.**  
+
+**After identifying the root cause, I apply the fix and verify that the cluster and application are healthy.**
+
+
+### 57. Pod stuck in Pending state. What do you check? 
+**When a Pod is stuck in Pending state, I first run `kubectl describe pod` and check the Events section to identify the scheduling issue.**  
+
+**I check node resource availability using `kubectl top nodes` and `kubectl describe node`.** 
+
+**I also verify PVC binding, StorageClass configuration, node affinity, node selectors, and taints and toleration.**  
+
+**For example, if the scheduler reports insufficient memory, I check resource request and node capacity.**   
+
+**Depending on the root cause, I optimize resource request or scale the worker nodes.**  
+
+**Finally, I verify that the Pod is successfully scheduled and running.**  
+
+**Remember these 5 major causes;**  
+**1. Insufficient CPU or memory.**  
+**2. PVC or Storage provisioning issues.**  
+**3. Node selectors of affinity mismatch.**  
+**4. Taints and tolerations mismatch.**  
+**5. Node capacity or Pod limit reached.**  
+
+### 58. Pod stuck in CrashLoopBackOff. What do you do? 
+**When a Pod enters CrashLoopBackOff, I first check its status using `kubectl get pods`, then run `kubectl describe pod` to investigate events, restart counts, and termination reasons.**  
+
+**Next, I check the previous container logs using `kubectl logs --previous`, because they often reveal why the application crashed.**  
+
+**I investigate common causes like application errors, incorrect configurations, missing environment variables, database connectivity, OOMKilled, and liveness probe failures.**  
+
+**After identifying the root cause, I fix the configuration or resource issue and monitor the Pod to ensure it becomes stable.**  
+
+**Remember these major causes;**  
+**1. Application crash**  
+**2. Incorrect command**  
+**3. Missing environment variables**  
+**4. Database unavailable**  
+**5. OOMKilled**  
+**6. Liveness probe failure**  
+**7. Permission denied**  
+**8. Missing dependencies**
+
+
+### 59. Pod cannot pull image. 
+**When a Pod cannot pull an image, I first check its status using `kubectl get pods`, then run `kubectl describe pod` and examine the Events section.**  
+
+**I check whether the image name and tags are correct, whether the registry is accessible, and whether authentication credentials are configured properl.**  
+
+**In AWS EKS, I also verify the worker node IAM role has the required ECR permissions and check network connectivity.**  
+
+**After fixing the root cause, I verify that the image is pulled successfully and the Pod starts running**  
+
+**Remember these 4 major causes;**  
+**1. Incorrect image name or tag.**
+**2. Private registry authentication failure.**  
+**3. Missing ECR IAM permissions.**  
+**4. Network connectivity issues.**  
+
+
+### 60. Service not reachable. 
+**The most common causes are incorrect Service Selectors, unhealthy Pods, port mismatches, NetworkPolicies, or DNS issues.**  
+
+**When a Kubernetes Service is not reachable, I first check the Service configuration using `kubectl get svc` and `kubectl describe svc`.**  
+
+**Then I verify its endpoints using `kubectl get endpoints` or EndpointSlices.**  
+
+**If there are no endpoints, I check whether Service selectors match Pod label and whether the Pods are Ready.**  
+
+**Next, I verify port and targetPort configurations, test connectivity from another Pod, and investigate DNS, NetworkPolicies, CNI, and Ingress if required.**  
+
+**Finally, I validate that the Service is routing traffic successfully.**
+
+
+### 61. Pod not scheduling.  
+**When a Pod is not scheduling, I first check its status using `kubectl get pods` and run `kubectl describe pod` to investigate FailedScheduling events.**  
+
+**I check node CPU and memory availability, allocatable resources, taints and tolerations, node selectors, affinity rules, and PVC status.**  
+
+**For example, if the scheduler reports insufficient CPU, I check resource request and node capacit.**  
+
+**Depending on the root cause, I optimize resource requests or scale worker nodes using Cluster Autoscaler in EKS.**  
+
+**Finally, I verify that the Pod is successfully scheduled and running.**  
+
+**Remember these  major causes;**  
+**1. Insufficient CPU or memory.**  
+**2. Node taints and tolerations mismatch.**  
+**3. Node selector or affinity mismatch.**  
+**4. Maximum Pod capacity reached.**  
+**5. PVC or storage provisioning issues.**  
+**6. Node unavailable or unhealthy.**  
+
+
+### 62. Node not ready.    
+**When a Kubernetes node becomes NotReady, I first check `kubectl get nodes` and then use `kubectl describe node` to investigate node conditions and events.**  
+
+**I check kubelet and containerd status, their logs, CPU and memory utilization, disk space, and network connectivity with the API Server.**  
+
+**In AWS EKS, I also investigate EC2 Instance health, security groups, and node IAM permissions where relevant.**  
+
+**After identifying the root cause, I recover the node or replace it if necessary.**  
+
+**Finally, I verify that the node returns to Ready and workloads are healthy.**  
+
+**Remember these 5 major causes;**  
+**1. Kubelet is stopped or unhealthy.**  
+**2. Container runtime (containerd) failure.**  
+**3. MemoryPressure, DiskPressure, or PIDPressure.**  
+**4. Network connectivity problems with the API Server.**  
+**5. EC2 Instance or underlying infrastructure failure.**
+
+
+### 63. Deployment not updating. 
+**When a Kubernetes Deployment is not updating, I first check its status using `kubectl get deployment` and `kubectl rollout status`.**   
+
+**Then I inspect the Deployment events and ReplicaSets using `kubectl describe deployment` and `kubectl get rs`.**  
+
+**I check whether new Pods are failing because of image pull errors, insufficient resources, application crashes, or readiness probe failures.**  
+
+**I also verify the image version and rolling update strategy.**  
+
+**After identifying the root cause, I fix the issue and monitor the rollout.**  
+
+**If the new release is impacting production, I use `kubectl rollout undo deployment` to restore the previous stable version.**  
+
+
+### 64. PVC stuck in pending.     
+### 65. High CPU usage in Pods.    
+### 66. How do you debug networking issues?      
+### 67. How do you deploy applications to Kubernetes using CI/CD?    
+### 68. How do you implement blue-green deployment?    
+### 69. What is canary deployment?      
+
+
 How do you handle secrets securely?       
 How do you upgrade Kubernetes cluster?       
 How do you backup etcd?       
@@ -525,9 +706,7 @@ How do you expose services in EKS?
 What are taints and tolerations?    
 What are node selectors?     
 What are affinity and anti-affinity rules?    
-What are resource requests and limits?     
-What happens when a Pod exceeds memory limit?     
-What is OOMKilled?     
+What are resource requests and limits?              
 How do you build Docker images for Kubernetes?     
 What is Helm?     
 What is Helm chart?    

@@ -267,15 +267,80 @@ kubectl rollout status deployment/myapp                 #Rollout status
 ### 29. What is a CronJob?
 **A CronJob in Kubernetes is used to schedule Jobs at specific times or intervals, similar to Linux cron. For example, we can use a CronJob to run database backups every day at midnight, clean logs periodically, or generate scheduled reports.**
 
-### 30. How does Kubernetes networking work?     
-### 31. What is the Pod network?     
-### 32. What is CNI?    
-### 33. What are popular CNI plugins?       
-### 34.      
+### 30. How does Kubernetes networking work?   
+**Kubernetes networking allows Pods, Services, and external users to communicate with each other across the cluster.**  
+
+**Kubernetes follows 4 main networking principles.**  
+
+**1. Pod-to-Pod communication**  
+- **Every Pod gets its own IP address.**
+- **Pods can communicate directly with other Pods across nodes.**
+- **CNI plugins such as Calico, Cilium, and AWS VPC CNI handle Pod networking.**
+
+**2. Pod-to-Service communication**  
+- **Pod IPs can change when Pods are recreated.**
+- **Kubernetes Services provide a stable IP and DNS name to access a group of Pods.**
+- **kube-proxy typically implements Service networking rules using iptables or IPVS. Some CNI solutions, such Cilium, can replace kube-proxy.**
+
+**3. External-to-Pod communication**  
+- **ClusterIp : Internal cluster communication**
+- **NodePort : Exposes application through a port on each node.**
+- **LoadBalancer : Exposes application through an external load balancer.**
+- **ExternalName : Maps a Service name to an external DNS name.**
+
+**4. DNS-based service discovery**
+- **Kubernetes uses CoreDNS for internal service discovery.**
+- **A frontend Pod can use this DNS name to communicate with the backend Service without knowing individual Pod IPs.**
+
+**Kubernetes networking enables communication between Pods, Services, and external users. Every Pod gets its own IP address, and Pods can communicate across nodes through a CNI plugin.**  
+**Services provide stable IP addresses and DNS names because Pod IPs can change.**  
+**CoreDNS handles service discovery, while kube-proxy typically manages Service traffic routing.**  
+**For external access, we use NodePort, LoadBalancer, or Ingress.**  
+
+**Important: CNI handles Pod networking, CoreDNS handles DNS resolution, and kube-proxy typically handles Service networking.**
+
+  
+### 31. What is the Pod network?   
+**A Pod Network is the network that allows Kubernetes Pods to communicate with each other using their IP addresses, even when they are running on different worker nodes.**  
+- **Every Pods gets a unique IP address.**
+- **Containers inside the same Pod share the same network namespace and IP address.**
+- **Pods can communicate directly without requiring NAT in the standard Kubernetes networking model.**
+- **CNI plugins provide Pod networking.**
+
+### 32. What is CNI? 
+**CNI stands for Container Network Interface. It is a standard used by Kubernetes container runtimes to configure Pod networking.**  
+**CNI plugins assign IP addresses, configure network interfaces, and enable communication between Pods.**
+
+### 33. What is Ingress? 
+**Ingress is a Kubernetes resource used to manage external HTTP and HTTPS traffic entering the cluster.**  
+**It supports hostname-based and path-based routing and forwards requests to the appropriate Kubernetes Services.**  
+
+### 34. What is Ingress Controller?     
+**Ingress Controller is a component in Kubernetes that manages external HTTP and HTTPS traffic entering the cluster.**  
+**It watches ingress resource, reads their routing rules, and forwards request to the appropriate Kubernetes Services.**  
+
+**Suppose you have three application:**   
+**`app.example.com` → Frontend Service**  
+**`api.exmaple.com` → Backend Service**  
+**`example.com/admin`**  
+
+**The Ingress Controller:**  
+- **Receives incoming HTTP/HTTPS request.**
+- **Check the hostname or URL path.**
+- **Matches the request against Ingress rules.**
+- **Routes traffic to the correct Kubernetes Service.**
+- **The Service forwards traffic to the backend Pods.**
    
-What is Ingress?   
-What is Ingress Controller?    
-Difference between Ingress and LoadBalancer?   
+    
+### 35. Difference between Ingress and LoadBalancer?     
+| Ingress                                                 | LoadBalancer                                               |
+| --------------------------------------------------------| -----------------------------------------------------------|
+| Routes HTTP/HTTPS traffic                               | Expose a Service externally                                |
+| Supports hostname and path-based routing                | Does not provide native hostname/path routing              |
+| Can route multiple applications through one entry point | Typically provisions an external load balancer per service |  
+| Requires an Ingress Controller                          | Requires load balancer integration                         |
+
+
 What is DNS in Kubernetes?   
 How does service discovery work?   
 What is a Persistent Volume (PV)?   

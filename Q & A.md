@@ -6,41 +6,41 @@
 **1. The Control plane**   
 **Managing the entire cluster. It's main components are;**   
   
-**1. kube-apiserver:**    
+**i). kube-apiserver:**    
 **The API server acts as the entry point to the cluster.**  
 **All communication between users, worker nodes, and control plane components happens through the API Server.**  
   
-**2. etcd:**   
+**ii). etcd:**   
 **It is a distributed key-value database.**   
 **It stores all Kubernetes cluster information.**   
 **It maintains the cluster's desired and current state information.**  
   
-**3. kube-shceduler:**   
+**iii). kube-shceduler:**   
 **It is responsible for scheduling nely created Pods onto suitale worker nodes.**  
 **It checks available CPU, memory, resource requests, node selectors, taints, and tolerations.**  
   
-**4. kube-controller-manager:**   
+**iv). kube-controller-manager:**   
 **It runs different controllers that continuosly monitor the cluster.**  
 **It ensures the actual cluster state matches the desired state.**    
 **It automatically takes corrective actions when something goes wrong.**   
   
-**5. cloud-controller-manager:**   
+**v). cloud-controller-manager:**   
 **It integrates Kubernetes with cloud providers such as AWS, Azure, and GCP.**  
 **It manages cloud-specific resources.**  
 
 **2. The Worker Nodes**   
 **Run the actual application workloads. Their main components are;**  
   
-**1. kubelet:**    
+**i). kubelet:**    
 **It is an agent running on every worker node.**      
 **It communicates with the API server.**     
 **It ensures containers inside Pods are running as expected.**    
   
-**2. kube-proxy:**   
+**ii). kube-proxy:**   
 **It maintains network rules on worker nodes.**     
 **It enables communication between Kubernetes Services and backend Pods.**    
   
-**3. Container Runtime:**   
+**iii). Container Runtime:**   
 **It is responsible for running containers.**   
 **It pulls container images from registries.**      
 **It starts, stops, and manages containers.**     

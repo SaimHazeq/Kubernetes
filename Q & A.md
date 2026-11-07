@@ -437,12 +437,30 @@ kubectl rollout status deployment/myapp                 #Rollout status
 | Not intended for secrets               | Encryption at rest can be configured     |  
 | Environment variables or mounted files | Environment variables or mounted files   | 
 
-### 47. How do you pass environment variables from ConfigMap?    
-What is RBAC?   
-What are Roles and RoleBindings?    
-Difference between Role and ClusterRole?    
-What is a ServiceAccount?  
-What are Network Policies?     
+
+### 47. How do you pass environment variables from ConfigMap? 
+**We can pass environment variables from a ConfigMap using `envFrom` or `valueFrom`.**  
+
+**With `envFrom`, all key-value pairs from the ConfigMap are inected into the container as environment variables.**  
+
+**With `valueFrom`. `configMapKeyRef`, we can inject only a specific key. This helps keep application configuration separate from Docker images.**
+
+
+### 48. What is RBAC?  
+
+
+### 49. What are Roles and RoleBindings?   
+
+
+### 50. Difference between Role and ClusterRole? 
+
+
+### 51. What is a ServiceAccount? 
+
+
+### 52. What are Network Policies?
+
+
 How do you restrict container privileges?   
 What is Horizontal Pod Autoscaler (HPA)?    
 What metrics does HPA use?     

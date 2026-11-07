@@ -129,12 +129,12 @@
 **A Pause Container is a special infrastructure container used b Kubernetes container runtime to establish and maintain the shared namespaces of a Pod.**  
 **it provides a shared network namespace so that multiple containers inside the same Pod can communicate using localhost and share the same Pod IP address.**
 
-### 17. What are liveness probes?
+### 17. What are Liveness probes?
 **A Liveness Probe is used to check whether an application container is still functioning properly.**  
 **If the health fails repeatedly, Kubernetes restarts the container automatically.**  
 **It helps detect issues like application deadlocks or unresponsive processes and provides automatic recovery.**
 
-### 18. What are readiness probes 
+### 18. What are Readiness probes? 
 **A Readiness Probe is used to check whether an application is ready to receive traffic.**  
 **If the readiness check fails, Kubernetes removes the Pod from the Service endpoints, preventing traffic from reaching it.**  
 **Once the application becomes healthy again, Kubernetes adds it back to the available endpoints.**  

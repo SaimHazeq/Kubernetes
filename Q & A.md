@@ -1,9 +1,9 @@
 ### 1. What are the main components of Kubernetes architecture? 
 **Kubernetes architecture is divided into two main parts:**  
 - **1. Control Plane**
-- **1. Worker Nodes**
+- **2. Worker Nodes**
 
-- **1. The Control plane**   
+**1. The Control plane**   
 **Managing the entire cluster. It's main components are;**   
   
 **1. kube-apiserver:**    
@@ -28,7 +28,7 @@
 **It integrates Kubernetes with cloud providers such as AWS, Azure, and GCP.**  
 **It manages cloud-specific resources.**  
 
-- **2. The Worker Nodes**   
+**2. The Worker Nodes**   
 **Run the actual application workloads. Their main components are;**  
   
 **1. kubelet:**    

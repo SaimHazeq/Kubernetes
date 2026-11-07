@@ -447,22 +447,56 @@ kubectl rollout status deployment/myapp                 #Rollout status
 
 
 ### 48. What is RBAC?  
+**RBAC(Role-Based-Access-Control) is a Kubernetes authorization mechanism used to control who can access Kubernetes resource and what actions thy can perform.**  
+**In simple terms, RBAC defines who can do what in a Kubernetes cluster.**  
+
+**4 main RBAC components**  
+- **Role: Defines permissions within namespace**
+  
+- **ClusterRole: Defines permissions across the cluster.**
+  
+- **RoleBinding: Assigns a Role or ClusterRole to users or groups within a namespace.**
+  
+- **ClusterRoleBinding: Assigns a ClusterRole across the cluster.**
+
+**Common RBAC verbs**    
+- **get = View a specific resource**
+- **list = List resources**
+- **watch = Monitor resource changes**
+- **create = Create resources**
+- **update = Update resources**
+- **patch = Partially update resources**
+- **delete = Delete resources   
 
 
-### 49. What are Roles and RoleBindings?   
+### 49. What is a ServiceAccount? 
+**A ServiceAccount is an identity used by applications running inside Kubernetes Pods to authenticate with the Kubernetes API Server.**  
+**We assign permissions to the ServiceAccount using RBAC and attach it to the Pod through `serviceAccountName`.**  
+**This allows applications to access only the Kubernetes resources they need, following the principle of least privilege.**    
+
+**Important AWS EKS Point: For application running in EKS that need access to AWS services such as S3, we commonly use EKS Pod Identity or IAM Roles for Service Account (IRSA).**  
+**This allows Pods to access AWS resources without storing AWS access keys inside containers.**
+
+### 50. What are Network Policies?
+**NetworkPolicy is a Kubernetes resource used to control incoming and outgoing network traffic for Pods. It works like a firewall by defining which Pods, namespaces, or IP ranges can communicate with selected Pods.**  
+**For example, I can allow backend Pods to access database Pods on port 3306 while blocking unwanted traffic. NetworkPolicy enforcement requires a compatible CNI plugin.**  
+
+### 51. How do you restrict container privileges? 
+**We restrict container privileges using Security Contexts, Linux features, and Pod Security Standards. We ensure containers run as non-root users, disable privilege escalation, drop unnecessary Linux capabilities, use read-only root filesystems, and apply seccomp profiles.**   
+
+**Important Security Settings**  
+- **`runAsNonRoot: true`  = Prevents running as root**
+- **`runAsUser: 1000`     = Runs container with a non-root user**
+- **`privileged: false`   = Prevents privileged container access**
+- **`alloPrivilegeEscalation: false`  = Prevents processes from gaining additional privileges**
+- **`readOnlyRootFilesystem`: true  = Prevents modifications to the container's root filesystem**
+- **`capabilities.drop: [ALL]`  = Removes unnecessary Linux capabilities**
+- **`seccompProfile`  = Restrict system calls available to the container**
 
 
-### 50. Difference between Role and ClusterRole? 
+### 52. What is Horizontal Pod Autoscaler (HPA)?
 
 
-### 51. What is a ServiceAccount? 
-
-
-### 52. What are Network Policies?
-
-
-How do you restrict container privileges?   
-What is Horizontal Pod Autoscaler (HPA)?    
 What metrics does HPA use?     
 What is Vertical Pod Autoscaler?    
 How do you monitor Kubernetes?    

@@ -689,11 +689,88 @@ kubectl rollout status deployment/myapp                 #Rollout status
 **If the new release is impacting production, I use `kubectl rollout undo deployment` to restore the previous stable version.**  
 
 
-### 64. PVC stuck in pending.     
-### 65. High CPU usage in Pods.    
-### 66. How do you debug networking issues?      
-### 67. How do you deploy applications to Kubernetes using CI/CD?    
-### 68. How do you implement blue-green deployment?    
+### 64. PVC stuck in pending.  
+**When a PVC is stuck in Pending state, I first check its status using `kubectl get pvc` and investigate the Events section using `kubectl describe pvc`.**  
+
+**Then I verify StorageClass configuration, PV availability, requested storage capacity, and access modes.**  
+
+**If dynamic provisioning is enables, I check the CSI driver and its logs.**  
+
+**In AWS EKS, I specifically investigate the EBS CSI driver, IAM permissions, and Availability Zone compatibility.**  
+
+**Remember these 5 major causes;**  
+**1. No matching PersistenVolume.**  
+**2. Incorrect or missing StorageClass**  
+**3. CSI driver failure.**  
+**4. Insufficient storage capacity.**  
+**5. Availability Zone or volume topology mismatch.**  
+
+
+### 65. High CPU usage in Pods. 
+**When I encounter high CPU usage in Kubernetes, I first identify the affected Pods using `kubectl top pods`.**  
+
+**Then I check container-level CPU consumption, resource request and limits, and application logs.**  
+
+**In production, I use Prometheus and Grafana to investigate CPU utilization, throttling, traffic patterns, and performance trends.**  
+
+**If the issue is caused by increased traffic, I use HPA to scale the number of replicas. If it's caused by inefficient application code or background processing, I investigate and optimize the application.**  
+
+**Finally, I monitor the workload to ensure CPU utilization and application performance return to normal.**  
+
+**Remember these 5 troubleshooting area;**  
+**1. Identify high-CPU Pods using `kubectl top pods`.**  
+**2. Check CPU requests and limits.**  
+**3. Investigate CPU throttling.**  
+**4. Analyze application performance and traffic.**  
+**5. Scale using HPA or optimize the application.**  
+
+
+### 66. How do you debug networking issues? 
+**I debug networking issues layer by layer. First, I check node and Pod health using `kubectl get nodes` and `kubectl get pods -o wide`.**  
+
+**Then I verify Pod-to-Pod connectivity, Service configuration, endpoints, and port mappings. If Service-name resolution fails, I investigate CoreDNS.**  
+
+**Next, I check NetworkPolicies, CNI plugin health, and node-level networking. In EKS, I specifically check AWS VPC CNI, IP availability, security groups, route tables, and NAT Gateway configuration.**  
+
+**Finally, if external access is failing, I investigate the Ingress controller, Load Balancer, and target group health.**  
+
+**I use `kubectl describe`, application logs, and connectivity tests to identify the exact failure point before making changes.**   
+
+- **One Pod affected → Investigate that Pod and its configuration.**
+- **One Node affected → Investigate node networking and CNI.**
+- **All Pods affected → Investigate cluster networking, DNS, or shared infrastructure.**
+- **Internal traffic works but external traffic fails → Investigate routing, security groups, NAT, or Load Balancer configuration.**
+
+
+### 67. How do you deploy applications to Kubernetes using CI/CD? 
+**I use Jenkins to automate application deployment to Kubernetes.**  
+
+**Whenever a developer pushes code to GitHub, a webhook triggers the Jenkins pipeline. Jenkins checks out the source code, builds the application, runs unit tests, and perform SonarQube code analysis.**  
+
+**Next, it builds a Docker image, scans it using Trivy, and pushes the approved image to Amazon ECR.**  
+
+**After that, Jenkins connects to the EKS cluster using authorized AWS and Kubernetes credentials. It updates the Kubernetes Deployment with the new image using kubectl or Helm.**  
+
+**Kubernetes performs a rolling update, creating new Pods and gradually termination old ones. I verify the deployment using `kubectl rollout status` and check Pod health, logs and events.**  
+
+**Finally, I monitor the application using Prometheus, Grafana, and CloudWatch. If deployment fails, I investigate the root cause and roll back to the previous stable version.**  
+
+
+### 68. How do you implement blue-green deployment? 
+**I implement Blue-Green deployment in Kubernetes using two separate Deployments, Blue and Green.**  
+
+**Blue runs the existing production version, while Green runs the new application version.**  
+
+**First, I deploy the new version to Green and wait until all Pods become Ready. Then I perform health checks and smoke tests to verify the application.**  
+
+**Once everything is working correctly, I switch the Kubernetes Service selector from Blue to Green. This redirects production traffic to the new version.**  
+
+**After deployment, I monitor application health, errors and latency using Prometheus and Grafana.**  
+
+**If I notice any critical issue, I can quickly roll back by changing the Service selector to Blue.**  
+
+**I usually automate this complete processing using Jenkins, Kubernetes manifests or Helm, and Amazon EKS.**  
+
 ### 69. What is canary deployment?      
 
 

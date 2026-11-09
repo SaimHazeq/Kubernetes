@@ -815,15 +815,96 @@ kubectl rollout status deployment/myapp                 #Rollout status
 **I monitor the cluster using Prometheus, Grafana and CloudWatch throughout the process.**  
 
 
-### 72. How do you backup etcd?       
-How do you manage multiple environments?   
-What is IAM Roles for Service Accounts (IRSA)?      
-How do you expose services in EKS?         
-What are taints and tolerations?    
-What are node selectors?     
-What are affinity and anti-affinity rules?    
-What are resource requests and limits?              
-How do you build Docker images for Kubernetes?     
-What is Helm?     
-What is Helm chart?    
-What is ArgoCD?    
+### 72. How do you backup etcd?  
+
+**AWS EKS , AWS manages the underlying etcd infrastructure, so we cannot take etcd snapshots. Instead, we use solutions such as Velero and AWS Backup to protect Kubernetes resource and persistent application data.**    
+  
+**In a self-managed Kubernetes cluster, etcd stores the entire cluster state, including Deployments, Pods, Services, Secrets and ConfigMaps.**  
+
+**We can take backup using the `etcdctl snapshot save` command with the appropriate endpoint, CA certificate, client certificate and private key.**  
+
+**After creating the snapshot, We can verify it using `etcdctl snapshot status` and upload it to secure external storage such as Amazon S3 with encryption and restricted access.**  
+
+**We can automate backup using cron jobs or a backup solution and configure retention policies and monitoring.**  
+
+**We also periodically test restoration to ensure the backup are recoverable.**  
+
+
+### 73. How do you manage multiple environments? 
+**I manage multiple environments such as Dev, QA, Staging and Production using Terraform, Kubernetes, Helm and Jenkins.**  
+
+**For infrastructure, I use reusable Terraform modules with separate environments configurations and isolated state files.**  
+
+**In Kubernetes, I use separate namespaces or clusters depending on the isolation requirements.**  
+
+**I use Helm charts to deploy the same application across environments with different values files for replica counts, resource limits and configurations.**  
+
+**For CI/CD, Jenkins automates the deployment process. First, the application is built and tested, then a Docker image is created and pushed to ECR.**  
+
+**The same immutable image is promoted from Dev to QA, then Staging and finally Production after successful testing and approval.**  
+
+**I also maintain separate secrets, IAM permissions and access controls for each environment.**  
+
+**This approach provides consistency, security and controlled deployments.**  
+
+
+### 74. What is IAM Roles for Service Accounts (IRSA)?
+**IRSA(IAM Roles for Service Account) is an AWS feature that allows Kubernetes Pods running in an EKS cluster to securely access AWS services using IAM permissions, without storing AWS access keys inside the Pods.**
+
+**"It connects a Kubernetes ServiceAccount with an AWS IAM Role."**
+
+**We associate an IAM Role with a Kubernetes ServiceAccount using the EKS OIDC provider. When a Pod uses that ServiceAccount, it receives temporary AWS credentials through AWS STS.**  
+
+**For example, if an application running in EKS needs to access S3, I create an IAM Role with the required S3 permissions, associate it with a ServiceAccount, and configure the Pod to use that ServiceAccount.**  
+
+**This provides fine-grained access control, follows least privilege, and avoids hardcoding AWS credentials.**  
+
+**REMEMBER**
+**IRSA is different from granting permissions to the worker node's IAM Role. With IRSA, you can give one application S3 access while another application has access to DynamoDB, even if both run on the same worker node.**  
+
+**Also, IRSA requires correct OIDC trust-policy conditions restricting access to the intended namespace and ServiceAccount. Without those restrictions, other workloads may be able to assume the role.**
+
+
+### 75. How do you expose services in EKS?  
+**In EKS, we expose applications using four main Kubernetes mechanisms:**  
+- **ClusterIP**
+- **NodePort**
+- **LoadBalancer**
+- **Ingress**
+
+**ClusterIP is used for internal communication between services. NodePort exposes an application through a port on worker nodes. LoadBalancer provisions an AWS load balancer, commonly an NLB when using the AWS Load Balancer Controller. Ingress is used for HTTP and HTTPS routing, and in EKS we commonly use the AWS Load Balancer Controller to provision an ALB.**  
+
+**In Production, I generally use ALB Ingress for public-facing applications, ClusterIP for internal microservices, and private networking for databases. This provides centralized routing and avoids creating a separate load balancer for every application.**  
+
+### 76. What are taints and tolerations? 
+**Taints and Tolerations are Kubernetes scheduling mechanisms used to control workload placement.**  
+
+**A taint is applied to a Node to prevent Pods from being scheduled there unless they have a matching tolerations. A toleration is configured in a Pod specification to allow it to run on that tainted Node.**    
+
+**There are three taint effect;**  
+- **`NoSchedule`→ Prevents new Pods without matching toleration from being scheduled.**  
+- **`PreferNoSchedule` → Kubernetes tries to avoid scheduling those Pods but may still schedule them.**  
+- **`NoExecute` → Prevents new Pods and evicts existing Pods that don't tolerate the taint.**  
+  
+**For example, in an EKS production environment, if I want to dedicate certain worker nodes to production workloads, I apply a NoSchedule taint to those nodes and configure matching tolerations in production Pods.**  
+
+**This helps isolate workloads and reserve dedicated compute resources.**  
+
+**IMPOTANT**
+**Toleration does not guarantee that the Pod will be scheduled on that node. It only removes the taint-based restriction. Use `nodeSelector` or node affinity to target specific nodes.**  
+
+
+### 77. What are node selectors? 
+**Node Selector is a Kubernetes scheduling mechanism that allows us to schedule Pods on specific worker nodes based on node labels.**  
+
+**For example, in an EKS cluster, if we have separate node groups for general workloads and memory-intensive applications, we can label the memory-optimized nodes with `workload=memory-intensive` and configure the application's Pod specification with the same node selector.**  
+
+**Kubernetes will schedule that Pod only on nodes matching the specified label.**  
+
+
+### 78. What are affinity and anti-affinity rules?    
+### 79. What are resource requests and limits?              
+### 80. How do you build Docker images for Kubernetes?     
+### 81. What is Helm?     
+### 82. What is Helm chart?    
+### 83. What is ArgoCD?    

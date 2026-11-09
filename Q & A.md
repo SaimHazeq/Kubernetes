@@ -772,11 +772,50 @@ kubectl rollout status deployment/myapp                 #Rollout status
 **I usually automate this complete processing using Jenkins, Kubernetes manifests or Helm, and Amazon EKS.**  
 
 ### 69. What is canary deployment?      
+**Canary deployment is a deployment strategy where we release a new application version to a small percentage of production users before making it available to everyone.**  
+
+**For example, suppose my application is running version 1. I deploy version 2 alongside it and initially route around 10% of traffic to the new version while the remaining 90% continues using version 1.**  
+
+**I monitor application metrics such as HTTP errors, response time, CPU and memory using Prometheus and Grafana.**  
+
+**If everything looks good, we gradually increase traffic to the new version, such as 25%, 50%, and finally 100%.**  
+
+**If we detect any critical issue, we stop the rollout and route traffic back to the stable version.**   
+
+**In Kubernetes, I can implement this using Argo Rollouts, or an Ingress controller that supports weighted traffic routing.**  
 
 
-How do you handle secrets securely?       
-How do you upgrade Kubernetes cluster?       
-How do you backup etcd?       
+### 70. How do you handle secrets securely?
+**I handle secrets securely by never hardcoding credentials in application code, Docker images, or Git repositories.**  
+
+**In Kubernetes, I use Kubernetes Secrets to manage sensitive information such as database passwords and API keys. I restrict access through RBAC and enable encryption at rest.**  
+
+**For production workloads on AWS EKS, I prefer AWS Secrets Manager integrated through the Secrets Store CSI Driver.**  
+
+**I use IAM roles through EKS Pod Identity or IRSA to allow application to access only the secrets they require.**  
+
+**In Jenkins, I use Jenkins Credentials or IAM roles instead of hardcoding credentials in pipeline scripts.**  
+
+**I also follow least-privilege access, secret rotation, TLS encryption, and auditing to reduce the risk of credential exposure.**  
+
+
+### 71. How do you upgrade Kubernetes cluster? 
+**I follow a planned, step-by-step process to upgrade a Kubernetes cluster.**  
+
+**First, I check the current cluster and node versions and review the target version's release notes, deprecated APIs and compatibility requirements.**  
+
+**Before upgrading production, I ensure application data, persistent volumes and configurations are backed up.**  
+
+**In EKS, I upgrade the control plane first, Once it is healthy, I upgrade compatible add-ons such as VPC CNI, CoreDNS and kube-proxy.**  
+
+**Next, I upgrade the worker node using managed node group updates or rolling node replacement. I make sure application have sufficient replicas and check PodDisruptionBudgets to minimize downtime.**  
+
+**Finally, I validate node health, Pod status, networking, DNS, storage and application availability.**  
+
+**I monitor the cluster using Prometheus, Grafana and CloudWatch throughout the process.**  
+
+
+### 72. How do you backup etcd?       
 How do you manage multiple environments?   
 What is IAM Roles for Service Accounts (IRSA)?      
 How do you expose services in EKS?         

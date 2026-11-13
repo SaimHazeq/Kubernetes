@@ -902,9 +902,85 @@ kubectl rollout status deployment/myapp                 #Rollout status
 **Kubernetes will schedule that Pod only on nodes matching the specified label.**  
 
 
-### 78. What are affinity and anti-affinity rules?    
-### 79. What are resource requests and limits?              
-### 80. How do you build Docker images for Kubernetes?     
-### 81. What is Helm?     
-### 82. What is Helm chart?    
+### 78. What are affinity and anti-affinity rules? 
+**Affinity and Anti-Affinity are Kubernetes scheduling mechanisms that control where Pods should or should not run based on Node or Pod labels.**  
+
+- **Affinity: Attracts a Pod towards specific Nodes or other Pods.**
+- **Anti-Affinity: Avoids placing a Pod on specific Nodes or alongside certain Pods.**
+
+**There are three main types: Node Affinity, Pod Affinity, and Pod Anti-Affinity.**  
+- **Node Affinity: Schedules Pods on Nodes based on specific labels.**
+**Example: Suppose you have memory-optimized nodes and want to schedule a memory-intensive application only on those nodes.**
+- **Pod Affinity: Schedules a Pod close to other Pods based on their labels.**
+**Example: Suppose your frontend and backend applications need to run in the same availability zone for better communication.**
+- **Pod Anti-Affinity: Prevents matching Pods from running close together.**
+**Example: Suppose your application has three replicas. You want them distributed across different worker nodes to improve availability.**
+
+  
+  
+**Node Affinity schedules Pods based on Node labels. Pod Affinity places Pods close to other matching Pods, while Pod Anti-Affinity keeps matching Pods away from each other.**  
+
+**For example, in an EKS production environment, I can use Node Affinity to schedule payment applications on dedicated production nodes as Pod Anti-Affinity to distribute their replicas across different worker nodes for high availability.**   
+
+**We can use required rules for strict scheduling and preferred rules when scheduling is flexible.**  
+
+**Two important Node Affinity types:**  
+- **`requiredDuringSchedulingIgnoreDuringExecution`: Hard rule. The Pod must match the condition to be scheduled.**
+- **`preferredDuringSchedulingIgnoreDuringExecution`: Soft rule. Kubernetes prefers matching Nodes but can choose another Node.**
+
+
+### 79. What are resource requests and limits? 
+**Resource request and limits are used in Kubernetes to manage CPU and memory consumption of containers.**   
+
+**Request define the minimum resource required by a container, and Kubernetes uses them to decide which Node can accommodate the Pod.**  
+
+**Limits define the maximum resource a container can consume.**  
+
+**For example, if I configure a CPU request of 250 millicores and a limit of 500 millicore, Kubernetes schedules tha Pod based on its 250m request, while the container can use up to 500m CPU.**  
+
+**If the container exceeds its CPU limit, it gets throttled. If it exceeds its memory limit, it can be terminated with an OOMKilled error.**   
+
+**In production, I monitor resource usage and configure requests and limits based on actual application requirements to avoid resource contention and performance issues.**  
+
+- **CPU is a compressible resource: Kubernetes throttles CPU usage.**
+- **Memory is an incompressible resource: The container can be killed when it exceeds its memory limit.**
+  
+
+### 80. How do you build Docker images for Kubernetes? 
+**First, we create a Dockerfile based on the application requirements. Then I build the application, run unit test, and create a Docker images using the Docker build command.**  
+
+**After building the image, I scan it using Trivy for vulnerabilities, tag it with a unique version, and push it to Amazon ECR.**  
+
+**Then, in my Jenkins CI/CD pipeline, I authenticate with the EKS cluster and deploy the ECR image using Kubernetes Deployment YAML or Helm.**  
+
+**Finally, I verify the deployment using kubectl rollout status, check Pod health, and monitor application logs.**  
+
+**I also follow Docker best practices, such as using lightweight base images, running containers as non-root users, avoiding hardcoded secrets, and using versioned image tags.**    
+
+
+### 81. What is Helm and Helm chart?
+**Helm is a package manager for Kubernetes that helps us install, configure, upgrade, and manage Kubernetes applications easily.**  
+
+**In simple words, Helm allows us to manage multiple Kubernetes YAML files using reusable templates called Helm Charts.**  
+
+**Without Helm, we manually manage multiple Kubernetes YAML files such as;**
+- **Deployment**
+- **Service**
+- **ConfigMap**
+- **Secret**
+- **Ingress**
+- **HorizontalPodAutoscaler**
+
+**With Helm, we package these resources into one reusable Helm Chart and deploy them using a single command.**    
+
+**1. Why do we use Helm?**  
+**Suppose you have an application running in three environments:**  
+- **Devlopment**
+- **QA**
+- **Production**
+
+**Without Helm, you might maintain separate YAML files for each environment.**  
+**This creates duplication and makes configuration management difficult.**  
+
+**
 ### 83. What is ArgoCD?    

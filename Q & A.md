@@ -1012,7 +1012,7 @@ helm template myapp ./myapp                    #preview generated Kubernetes YAM
 
 
 **
-### 83. What is ArgoCD? 
+### 82. What is ArgoCD? 
 **ArgoCD is a GitOps-based continuous delivery tool used to deploy and manage applications on Kubernetes.**  
 
 **It continuously monitor a Git repository containing Kubernetes manifests or Helm Charts and compares the desired state in Git with the actual state in the cluster.**  

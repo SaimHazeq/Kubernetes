@@ -982,5 +982,44 @@ kubectl rollout status deployment/myapp                 #Rollout status
 **Without Helm, you might maintain separate YAML files for each environment.**  
 **This creates duplication and makes configuration management difficult.**  
 
+**2. With Helm:**  
+- **Create one reusable Helm Chart.**
+- **Maintain separate values files for each environment.**
+- **Deploy the same application with different configurations.**
+
+
+**Helm Chart**  
+**A Helm Chart is a collection of files that describe a Kubernetes application and its resource.**    
+
+**`Chart.yaml`: Contains chart name, version, and metadata.**  
+**`values.yaml`: Contains default configuration values.**  
+**`templates/`: Contains Kubernetes YAML templates files.**  
+
+**Important Helm Commands**   
+```
+helm version                                   #check Helm version
+helm create myapp                              #create a new Helm Chart
+helm install myapp ./myapp                     #install a Helm Chart
+helm list                                      #list installed releases
+helm upgrade myapp ./myapp                     #upgrade an application
+helm upgrade myapp ./myapp -f values-prod.yaml #upgrade with custom values
+helm rollback myapp 1                          #rollback to a previous release version
+helm uninstall myapp                           #uninstall an application
+helm history myapp                             #check release history
+helm lint                                      #validate the chart
+helm template myapp ./myapp                    #preview generated Kubernetes YAML
+```
+
+
 **
-### 83. What is ArgoCD?    
+### 83. What is ArgoCD? 
+**ArgoCD is a GitOps-based continuous delivery tool used to deploy and manage applications on Kubernetes.**  
+
+**It continuously monitor a Git repository containing Kubernetes manifests or Helm Charts and compares the desired state in Git with the actual state in the cluster.**  
+
+**If any changes are detected, Argo CD marks the application as OutOfSync and can automatically synchronize it.**  
+
+**It also supports features like automated deployments, self-healing, rollback and application health monitoring.**  
+
+**In typical DevOps pipeline, I would use Jenkins for building, testing and pushing Docker images to ECR, and ArgoCD for deploying those images to EKS using GitOps.**  
+

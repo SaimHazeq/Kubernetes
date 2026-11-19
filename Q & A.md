@@ -15,8 +15,8 @@
 **It stores all Kubernetes cluster information.**   
 **It maintains the cluster's desired and current state information.**  
   
-**iii). kube-shceduler:**   
-**It is responsible for scheduling nely created Pods onto suitale worker nodes.**  
+**iii). kube-scheduler:**   
+**It is responsible for scheduling newly created Pods onto suitale worker nodes.**  
 **It checks available CPU, memory, resource requests, node selectors, taints, and tolerations.**  
   
 **iv). kube-controller-manager:**   
